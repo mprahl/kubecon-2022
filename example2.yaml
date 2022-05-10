@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kubecon-demo-source-secret
+  # Must be in the same namespace as the policy
+  namespace: policies
+data:
+  cluster1-app-password: a3ViZWNvbg==
+  cluster2-app-password: MjAyMg==
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: kubecon-demo-secret
+  namespace: policies
+  annotations:
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: kubecon-demo-secret
+        spec:
+          remediationAction: enforce
+          severity: low
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                kind: Secret
+                apiVersion: v1
+                metadata:
+                  name: kubecon-demo
+                  namespace: default
+                data:
+                  app-password: >
+                    {{hub fromSecret "" "kubecon-demo-source-secret" (printf "%s-app-password" .ManagedClusterName) hub}}
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: kubecon-demo-secret-binding
+  namespace: policies
+placementRef:
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+  name: kubecon-demo-secret-placement
+subjects:
+- apiGroup: policy.open-cluster-management.io
+  kind: Policy
+  name: kubecon-demo-secret
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: kubecon-demo-secret-placement
+  namespace: policies
+spec: {}
