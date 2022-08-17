@@ -56,4 +56,4 @@ spec:
         - key: datacenter
           operator: In
           values:
-          - valencia
+          - boston
