@@ -1,7 +1,7 @@
 apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
-  name: kubecon-demo-configmap
+  name: devconf-demo-configmap
   namespace: policies
   annotations:
     policy.open-cluster-management.io/standards: NIST SP 800-53
@@ -14,7 +14,7 @@ spec:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
         metadata:
-          name: kubecon-demo-configmap
+          name: devconf-demo-configmap
         spec:
           remediationAction: inform
           severity: low
@@ -24,7 +24,7 @@ spec:
                 kind: ConfigMap
                 apiVersion: v1
                 metadata:
-                  name: kubecon-demo
+                  name: devconf-demo
                   namespace: default
                 data:
                   movie-quote: "Do or do not. There is no try."
@@ -32,21 +32,21 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: kubecon-demo-configmap-binding
+  name: devconf-demo-configmap-binding
   namespace: policies
 placementRef:
   apiGroup: cluster.open-cluster-management.io
   kind: Placement
-  name: kubecon-demo-configmap-placement
+  name: devconf-demo-configmap-placement
 subjects:
 - apiGroup: policy.open-cluster-management.io
   kind: Policy
-  name: kubecon-demo-configmap
+  name: devconf-demo-configmap
 ---
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: kubecon-demo-configmap-placement
+  name: devconf-demo-configmap-placement
   namespace: policies
 spec:
   predicates:
