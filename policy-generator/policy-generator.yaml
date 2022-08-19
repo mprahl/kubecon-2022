@@ -1,0 +1,15 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-generator-config
+policyDefaults:
+  namespace: policies
+  placement:
+    labelSelector:
+      datacenter: boston
+policies:
+- name: devconf-demo-configmap
+  disabled: false
+  manifests:
+    - path: input/configmap.yaml
+  remediationAction: enforce
