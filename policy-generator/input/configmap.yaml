@@ -1,7 +1,0 @@
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: devconf-demo
-  namespace: default
-data:
-  movie-quote: "Do or do not. There is no try."

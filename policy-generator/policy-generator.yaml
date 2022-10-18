@@ -6,10 +6,9 @@ policyDefaults:
   namespace: policies
   placement:
     labelSelector:
-      datacenter: boston
+      datacenter: detroit
 policies:
-- name: devconf-demo-configmap
-  disabled: false
+- name: kubecon-demo-configmap
   manifests:
-    - path: input/configmap.yaml
+    - path: input/namespace.yaml
   remediationAction: enforce

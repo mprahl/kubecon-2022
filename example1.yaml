@@ -1,12 +1,12 @@
 apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
-  name: devconf-demo-configmap
+  name: kubecon-demo-app-ns
   namespace: policies
   annotations:
     policy.open-cluster-management.io/standards: NIST SP 800-53
-    policy.open-cluster-management.io/categories: CM Configuration Management
-    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+    policy.open-cluster-management.io/categories: CA Security Assessment and Authorization
+    policy.open-cluster-management.io/controls: CA-2 Security Assessments, CA-7 Continuous Monitoring
 spec:
   disabled: false
   policy-templates:
@@ -14,39 +14,38 @@ spec:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
         metadata:
-          name: devconf-demo-configmap
+          name: kubecon-demo-app-ns
         spec:
           remediationAction: inform
           severity: low
           object-templates:
             - complianceType: musthave
               objectDefinition:
-                kind: ConfigMap
+                kind: Namespace
                 apiVersion: v1
                 metadata:
-                  name: devconf-demo
-                  namespace: default
-                data:
-                  movie-quote: "Do or do not. There is no try."
+                  name: apps
+                  labels:
+                    pod-security.kubernetes.io/enforce: '{{- if eq (fromClusterClaim "env") "prod" -}} restricted {{- else -}} privileged {{- end -}}'
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: devconf-demo-configmap-binding
+  name: kubecon-demo-ns-binding
   namespace: policies
 placementRef:
   apiGroup: cluster.open-cluster-management.io
   kind: Placement
-  name: devconf-demo-configmap-placement
+  name: kubecon-demo-ns-placement
 subjects:
 - apiGroup: policy.open-cluster-management.io
   kind: Policy
-  name: devconf-demo-configmap
+  name: kubecon-demo-app-ns
 ---
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: devconf-demo-configmap-placement
+  name: kubecon-demo-ns-placement
   namespace: policies
 spec:
   predicates:
@@ -56,4 +55,4 @@ spec:
         - key: datacenter
           operator: In
           values:
-          - boston
+          - detroit
