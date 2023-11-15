@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: apps
   labels:
-    pod-security.kubernetes.io/enforce: '{{- if eq (fromClusterClaim "env") "prod" -}} restricted {{- else -}} privileged {{- end -}} -}}'
+    pod-security.kubernetes.io/enforce: '{{- if eq (fromClusterClaim "env") "prod" -}} restricted {{- else -}} privileged {{- end -}}'
